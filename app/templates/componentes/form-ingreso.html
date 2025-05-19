@@ -1,0 +1,53 @@
+<form action="{{ url_for(session.get('user_role') == 'admin' and 'admin.ingreso' or 'user.ingreso') }}" method="post" class="form-ingreso" id="ingresoForm">
+  <h1>FORMULARIO DE INGRESOS</h1>
+
+  <div class="form-group">
+    <label for="descripcion">Descripción:</label>
+    <textarea id="descripcion" name="descripcion" required></textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="cantidad">Cantidad:</label>
+    <input type="number" id="cantidad" name="cantidad" min="1" required />
+  </div>
+
+  <div class="form-group">
+    <label for="precio_unitario">Precio Unitario:</label>
+    <input type="number" id="precio_unitario" name="precio_unitario" step="0.01" min="0" required />
+  </div>
+
+  <div class="form-group">
+    <label for="precio_total">Precio Total:</label>
+    <input type="number" id="precio_total" name="precio_total" step="0.01" min="0" readonly />
+  </div>
+
+  <!-- Campos ocultos para fecha, hora y usuario -->
+  <input type="hidden" id="fecha_hora" name="fecha_hora" />
+  <input type="hidden" id="usuario" name="usuario" value="{{ session.get('username', '') }}" />
+  <input type="hidden" id="is_admin" name="is_admin" value="{{ session.get('is_admin', '') }}" />
+
+  <button type="submit" class="btn-submit">Registrar Ingreso</button>
+</form>
+
+<!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
+
+<!-- Scripts necesarios -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Pasar mensajes flash a JavaScript
+    const mensajesFlash = [
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {
+                        "categoria": "{{ category }}",
+                        "mensaje": "{{ message }}"
+                    }{{ "," if not loop.last }}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    ];
+</script>
+<script src="{{ url_for('static', filename='js/form-ingreso.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/form-ingreso.css') }}" />

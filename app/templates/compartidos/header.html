@@ -1,0 +1,18 @@
+{% block estilos %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}" />
+{% endblock %}
+
+{% block header %}
+  <header class="base header-app">
+    <div class="contenido-header">
+      <div class="logo-empresa">
+        <div class="logo">
+          <i class="fi fi-br-bank"></i>
+        </div>
+        <div class="nombre-empresa fuente-google">
+          <h2>CN LIRIOS</h2>
+        </div>
+      </div>
+    </div>
+  </header>
+{% endblock %}

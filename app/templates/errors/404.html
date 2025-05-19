@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+  {{ super() }}
+  Página No Encontrada
+{% endblock %}
+
+{% block contenido %}
+  <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
+    <h1 style="color: #e74c3c; font-size: 48px; margin-bottom: 20px;">404</h1>
+    <h2 style="color: #34495e; font-size: 24px; margin-bottom: 20px;">Página No Encontrada</h2>
+    <p style="color: #7f8c8d; font-size: 18px; margin-bottom: 30px;">Lo sentimos, la página que estás buscando no existe.</p>
+    <img src="{{ url_for('static', filename='images/404.jpg') }}" alt="Página No Encontrada" style="width: 150px; margin-bottom: 30px;" />
+    <p style="color: #7f8c8d; font-size: 16px;">Es posible que hayas escrito mal la dirección o que la página haya sido movida.</p>
+    <a href="{{ url_for('main.index') }}" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #3498db; color: white; text-decoration: none; border-radius: 5px; transition: background-color 0.3s;">Volver a la página principal</a>
+  </div>
+{% endblock %}

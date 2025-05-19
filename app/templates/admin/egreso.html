@@ -1,0 +1,13 @@
+{% extends 'admin/dashboard.html' %}
+
+{% block titulo %}
+  ADMIN | EGRESO
+{% endblock %}
+
+{% block formulario %}
+  {% include 'componentes/form-egreso.html' %}
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/script-egreso.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Bloque de estilos segun el archivo que los extienda -->
+    {% block estilos %}
+
+    {% endblock %}
+
+    <!-- Bloque de titulo segun el archivo que los extienda -->
+    <title>
+      {% block titulo %}
+        APP |
+      {% endblock %}
+    </title>
+  </head>
+  <body>
+    <div class="contenedor-general">
+      {% block header %}
+
+      {% endblock %}
+      {% block nav_bar %}
+
+      {% endblock %}
+
+      {% block main %}
+
+      {% endblock %}
+      {% block footer %}
+
+      {% endblock %}
+    </div>
+  </body>
+</html>

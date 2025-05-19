@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+  {{ super() }}
+  ADMINISTRADOR
+{% endblock %}
+
+{% block estilos %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style-base.css') }}" />
+{% endblock %}
+
+{% block header %}
+  {% include 'compartidos/header.html' %}
+{% endblock %}
+
+{% block nav_bar %}
+  {% include 'compartidos/nav-admin.html' %}
+{% endblock %}
+
+{% block main %}
+  <main class="base contenido-principal">
+    {% block formulario %}
+
+    {% endblock %}
+    <a href="{{ url_for('auth.logout') }}">SALIR</a>
+  </main>
+
+  {% block scripts %}
+
+  {% endblock %}
+{% endblock %}
+
+{% block footer %}
+  {% include 'compartidos/footer.html' %}
+{% endblock %}

@@ -1,0 +1,28 @@
+{% block estilos %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}" />
+{% endblock %}
+
+{% block nav_bar %}
+  <nav class="base barra-navegacion-principal">
+    <div class="name-barra">
+      <h4>Menu de Opciones</h4>
+    </div>
+    <hr />
+    <div class="barra-opciones">
+      <ul class="lista-opciones">
+        <li class="item">
+          <a href="{{ url_for('user.ingreso') }}" class="item-link">
+            <i class="fi fi-br-chat-arrow-grow"></i>
+            <span class="item-name">Ingreso</span>
+          </a>
+        </li>
+        <li class="item">
+          <a href="{{ url_for('user.egreso') }}" class="item-link">
+            <i class="fi fi-br-chat-arrow-down"></i>
+            <span class="item-name">Egreso</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+{% endblock %}

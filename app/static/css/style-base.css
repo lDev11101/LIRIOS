@@ -1,0 +1,43 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* color: #fff; */
+}
+
+body {
+    /* background-color: #05070A; */
+}
+
+.contenedor-general {
+    border: 1px solid red;
+    width: 100vw;
+    height: 100vh;
+
+    /*GRID*/
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+}
+
+.header-app {
+    border: 1px solid green;
+    grid-area: 1 / 1 / 2 / 6;
+}
+
+.barra-navegacion-principal {
+    border: 1px solid orange;
+    grid-area: 2 / 1 / 10 / 2;
+}
+
+.contenido-principal {
+    border: 1px solid purple;
+    grid-area: 2 / 2 / 10 / 6;
+}
+
+.pie-pagina {
+    border: 1px solid blue;
+    grid-area: 10 / 1 / 11 / 6;
+}
