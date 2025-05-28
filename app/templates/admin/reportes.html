@@ -1,0 +1,89 @@
+{% extends 'admin/dashboard.html' %}
+
+{% block titulo %}
+  ADMIN | REPORTES
+{% endblock %}
+
+{% block formulario %}
+  <h3>Filtros para el Reporte General</h3>
+  <form method="post">
+    <div class="filtro-reporte">
+      <label for="usuario">Usuario</label>
+      <select name="usuario" id="usuario">
+        <option value="">Seleccione un usuario</option>
+        {% for usuario in usuarios %}
+        <option value="{{ usuario }}" {% if usuario|string == filtros.usuario|string %}selected{% endif %}>{{ usuario }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="filtro-reporte">
+      <div class="filtro-ingreso">
+        <label for="ingreso">Ingreso</label>
+        <input type="checkbox" name="ingreso" id="ingreso" {% if filtros.ingreso %}checked{% endif %} />
+      </div>
+      <div class="filtro-egreso">
+        <label for="egreso">Egreso</label>
+        <input type="checkbox" name="egreso" id="egreso" {% if filtros.egreso %}checked{% endif %} />
+      </div>
+    </div>
+    <div class="filtro-reporte">
+      <label for="fecha_inicio">Fecha Inicio</label>
+      <input type="date" id="fecha_inicio" name="fecha_inicio" value="{{ filtros.fecha_inicio }}">
+    </div>
+    <div class="filtro-reporte">
+      <label for="fecha_final">Fecha Final</label>
+      <input type="date" id="fecha_final" name="fecha_final" value="{{ filtros.fecha_final }}">
+    </div>
+    <div class="btn-filtro">
+      <input type="submit" value="Filtrar" class="btn-submit" />
+    </div>
+  </form>
+{% endblock %}
+
+{% block contenido %}
+  <h4>Tabla de contenido de datos</h4>
+  <form method="post" action="{{ url_for('admin.exportar_excel') }}">
+    <!-- Campos ocultos para enviar los filtros actuales -->
+    <input type="hidden" name="usuario" value="{{ filtros.usuario }}">
+    <input type="hidden" name="ingreso" value="{{ 'on' if filtros.ingreso else '' }}">
+    <input type="hidden" name="egreso" value="{{ 'on' if filtros.egreso else '' }}">
+    <input type="hidden" name="fecha_inicio" value="{{ filtros.fecha_inicio }}">
+    <input type="hidden" name="fecha_final" value="{{ filtros.fecha_final }}">
+    <button type="submit" class="btn-submit">Exportar a Excel</button>
+  </form>
+  <table>
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Usuario</th>
+        <th>Tipo</th>
+        <th>Descripción</th>
+        <th>Cantidad</th>
+        <th>Precio Unitario</th>
+        <th>Precio Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in resultados %}
+        <tr>
+          <td>{{ row[0] }}</td>
+          <td>{{ row[1] }}</td>
+          <td>{{ row[2] }}</td>
+          <td>{{ row[3] }}</td>
+          <td>{{ row[4] }}</td>
+          <td>{{ row[5] }}</td>
+          <td>{{ row[6] }}</td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="7">No hay datos para mostrar.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
+
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/script-egreso.js') }}"></script>
+{% endblock %}

@@ -22,7 +22,10 @@
     {% block formulario %}
 
     {% endblock %}
-    <a href="{{ url_for('auth.logout') }}">SALIR</a>
+    <hr />
+    {% block contenido %}
+
+    {% endblock %}
   </main>
 
   {% block scripts %}

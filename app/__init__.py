@@ -17,6 +17,7 @@ def create_app():
             user=os.getenv("DB_USER"),
             password=os.getenv("DB_PASSWORD"),
             database=os.getenv("DB_NAME"),
+            port=os.getenv("DB_PORT"),
         )
         app.config["db_conexion"] = db_conect
     except mysql.connector.Error as err:

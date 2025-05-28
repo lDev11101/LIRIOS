@@ -5,6 +5,6 @@ bp_main = Blueprint("main", __name__, url_prefix="/")
 
 @bp_main.route("/")
 def index():
-    if not "username" in session:
+    if not "username" not in session:
         return redirect(url_for("auth.login"))
     return render_template("index.html")

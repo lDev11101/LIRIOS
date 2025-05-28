@@ -29,6 +29,12 @@
           </a>
         </li>
         <li class="item">
+          <a href="{{ url_for('admin.reportes') }}" class="item-link">
+            <i class="fi fi-br-gears"></i>
+            <span class="item-name">Reportes</span>
+          </a>
+        </li>
+        <li class="item">
           <a href="#" class="item-link">
             <i class="fi fi-br-gears"></i>
             <span class="item-name">Configuraciones</span>
@@ -36,5 +42,6 @@
         </li>
       </ul>
     </div>
+    <a href="{{ url_for('auth.logout') }}">SALIR</a>
   </nav>
 {% endblock %}
