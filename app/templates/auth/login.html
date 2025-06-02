@@ -1,33 +1,47 @@
-{% extends 'base.html' %}
-
-{% block estilos %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}" />
-{% endblock %}
-
-{% block titulo %}
-  {{ super() }}
-  LOGIN
-{% endblock %}
-
-{% block main %}
-  <main class="base contenido-principal">
-    <div class="login-container">
-      <h1 class="login-title">Iniciar Sesión</h1>
-      <form action="{{ url_for('auth.login') }}" method="POST" class="login-form">
-        <div class="form-group">
-          <label for="username">Nombre de usuario</label>
-          <input type="text" id="username" name="username" placeholder="Introduce tu nombre de usuario" required />
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="h-screen w-full flex items-stretch justify-center dark:bg-gray-900 text-gray-800 dark:text-gray-200 overflow-hidden">
+    <div class="contenedor-general w-full max-h-screen flex flex-col justify-center items-center">
+      <main class="base contenido-principal flex items-center justify-center w-full h-full">
+        <div class="login-container p-4 h-80 w-1/4 rounded shadow-lg bg-white dark:bg-gray-800">
+          <h1 class="login-title font-bold text-2xl text-center">Iniciar Sesión</h1>
+          <form action="{{ url_for('auth.login') }}" method="POST" class="login-form flex flex-col gap-y-4 h-50 p-2 rounded mt-4">
+            {% with messages=get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                <div class="flex flex-col gap-y-2 mb-2">
+                  {% for category, message in messages %}
+                    {% if category == 'success' %}
+                      <div class="px-4 py-2 rounded bg-green-100 text-green-800 border border-green-300">{{ message }}</div>
+                    {% elif category == 'danger' or category == 'error' %}
+                      <div class="px-4 py-2 rounded bg-red-100 text-red-800 border border-red-300">{{ message }}</div>
+                    {% elif category == 'warning' %}
+                      <div class="px-4 py-2 rounded bg-yellow-100 text-yellow-800 border border-yellow-300">{{ message }}</div>
+                    {% else %}
+                      <div class="px-4 py-2 rounded bg-blue-100 text-blue-800 border border-blue-300">{{ message }}</div>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+            <div class="relative">
+              <input type="text" id="username" name="username" class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" required placeholder=" " />
+              <label for="username" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Nombre de usuario</label>
+            </div>
+            <div class="relative">
+              <input type="password" id="password" name="password" class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+              <label for="password" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Contraseña</label>
+            </div>
+            <button type="submit" class="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900">Iniciar Sesión</button>
+          </form>
         </div>
-        <div class="form-group">
-          <label for="password">Contraseña</label>
-          <input type="password" id="password" name="password" placeholder="Introduce tu contraseña" required />
-        </div>
-        <button type="submit" class="login-button">Iniciar Sesión</button>
-      </form>
+      </main>
+      <footer class="base pie-pagina">Todos los derechos reservados por CNLIRIOS</footer>
     </div>
-  </main>
-{% endblock %}
-
-{% block footer %}
-  {% include 'compartidos/footer.html' %}
-{% endblock %}
+  </body>
+</html>

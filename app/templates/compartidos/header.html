@@ -3,15 +3,24 @@
 {% endblock %}
 
 {% block header %}
-  <header class="base header-app">
-    <div class="contenido-header">
-      <div class="logo-empresa">
-        <div class="logo">
-          <i class="fi fi-br-bank"></i>
+  <header class="base header-app w-full h-full border-b">
+    <div class="contenido-header w-full h-full flex items-center justify-between">
+      <div class="logo-empresa flex flex-row items-center gap-4 px-4">
+        <div class="logo size-24 flex items-center justify-center">
+          <img src="{{ url_for('static', filename='image/lirios-logo.png') }}" alt="" />
         </div>
-        <div class="nombre-empresa fuente-google">
-          <h2>CN LIRIOS</h2>
+        <div class="nombre-empresa fuente-google text-2xl font-bold text-yellow-500">
+          <h2>CENTRO DE NEGOCIOS LIRIOS</h2>
         </div>
+      </div>
+      <div class="h-full p-8 flex items-center justify-end">
+        <!-- usuario top-right -->
+        <a href="">
+          <div class="flex flex-col justify-center items-center">
+            <span class="text-yellow-500 w-full h-full text-4xl flex justify-center items-center"><i class="fi fi-br-user"></i></span>
+            <p class="text-yellow-400 font-bold">Username</p>
+          </div>
+        </a>
       </div>
     </div>
   </header>

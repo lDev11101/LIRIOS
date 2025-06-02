@@ -3,45 +3,46 @@
 {% endblock %}
 
 {% block nav_bar %}
-  <nav class="base barra-navegacion-principal">
-    <div class="name-barra">
+  <nav class="col-span-1 row-start-2 row-end-10 w-full h-full flex flex-col">
+    <div class="name-barra text-center font-bold text-2xl p-3">
       <h4>Menu de Opciones</h4>
     </div>
     <hr />
-    <div class="barra-opciones">
-      <ul class="lista-opciones">
-        <li class="item">
-          <a href="#" class="item-link">
+    <div class="barra-opciones flex-1">
+      <ul class="borderw-full h-full p-2 flex flex-col">
+        <li class="border-1 w-full border-gray-300 appearance-none p-3 font-bold my-1 trnsition duration-200 ease-in-out hover:translate-x-2 hover:bg-yellow-500 hover:text-white hover:text-lg hover:cursor-pointer">
+          <a href=" #" class="item-link w-full h-full block">
             <i class="fi fi-br-user"></i>
-            <span class="item-name">Usuario</span>
+            <span class="">Usuario</span>
           </a>
         </li>
-        <li class="item">
-          <a href="{{ url_for('admin.ingreso') }}" class="item-link">
+        <li class="border-1 w-full border-gray-300 appearance-none p-3 font-bold my-1 trnsition duration-200 ease-in-out hover:translate-x-2 hover:bg-yellow-500 hover:text-white hover:text-lg hover:cursor-pointer">
+          <a href="{{ url_for('admin.ingreso') }}" class="item-link w-full h-full block">
             <i class="fi fi-br-chat-arrow-grow"></i>
-            <span class="item-name">Ingreso</span>
+            <span class="">Ingreso</span>
           </a>
         </li>
-        <li class="item">
-          <a href="{{ url_for('admin.egreso') }}" class="item-link">
+        <li class="border-1 w-full border-gray-300 appearance-none p-3 font-bold my-1 trnsition duration-200 ease-in-out hover:translate-x-2 hover:bg-yellow-500 hover:text-white hover:text-lg hover:cursor-pointer">
+          <a href="{{ url_for('admin.egreso') }}" class="item-link w-full h-full block">
             <i class="fi fi-br-chat-arrow-down"></i>
-            <span class="item-name">Egreso</span>
+            <span class="">Egreso</span>
           </a>
         </li>
-        <li class="item">
-          <a href="{{ url_for('admin.reportes') }}" class="item-link">
+        <li class="border-1 w-full border-gray-300 appearance-none p-3 font-bold my-1 trnsition duration-200 ease-in-out hover:translate-x-2 hover:bg-yellow-500 hover:text-white hover:text-lg hover:cursor-pointer">
+          <a href="{{ url_for('admin.reportes') }}" class="item-link w-full h-full block">
             <i class="fi fi-br-gears"></i>
-            <span class="item-name">Reportes</span>
+            <span class="">Reportes</span>
           </a>
         </li>
-        <li class="item">
-          <a href="#" class="item-link">
+        <li class="border-1 w-full border-gray-300 appearance-nonep-3 p-3 font-bold my-1 trnsition duration-200 ease-in-out hover:translate-x-2 hover:bg-yellow-500 hover:text-white hover:text-lg hover:cursor-pointer">
+          <a href=" #" class="item-link w-full h-full">
             <i class="fi fi-br-gears"></i>
-            <span class="item-name">Configuraciones</span>
+            <span class="">Configuraciones</span>
           </a>
         </li>
       </ul>
     </div>
-    <a href="{{ url_for('auth.logout') }}">SALIR</a>
+    <hr />
+    <a class="border-danger-500 p-3 text-center font-bold m-1 trnsition duration-200 ease-in-out hover:bg-red-500 hover:text-white" href="{{ url_for('auth.logout') }}">SALIR</a>
   </nav>
 {% endblock %}

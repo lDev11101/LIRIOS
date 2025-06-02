@@ -1,33 +1,41 @@
-<form action="{{ url_for(session.get('user_role') == 'admin' and 'admin.ingreso' or 'user.ingreso') }}" method="post" class="form-ingreso" id="ingresoForm">
-  <h1>FORMULARIO DE INGRESOS</h1>
-
-  <div class="form-group">
-    <label for="descripcion">Descripción:</label>
-    <textarea id="descripcion" name="descripcion" required></textarea>
+<div class="layout-content-container w-full h-full flex flex-col items-center justify-center max-w-[960px] flex-1 bg-[#101828] rounded-2xl shadow-lg mx-auto my-8">
+  <div class="flex flex-wrap justify-between gap-3 p-4">
+    <p class="text-[##101D27] tracking-light text-[32px] font-bold leading-tight min-w-72">Formulario de Ingresos</p>
   </div>
-
-  <div class="form-group">
-    <label for="cantidad">Cantidad:</label>
-    <input type="number" id="cantidad" name="cantidad" min="1" required />
-  </div>
-
-  <div class="form-group">
-    <label for="precio_unitario">Precio Unitario:</label>
-    <input type="number" id="precio_unitario" name="precio_unitario" step="0.01" min="0" required />
-  </div>
-
-  <div class="form-group">
-    <label for="precio_total">Precio Total:</label>
-    <input type="number" id="precio_total" name="precio_total" step="0.01" min="0" readonly />
-  </div>
-
-  <!-- Campos ocultos para fecha, hora y usuario -->
-  <input type="hidden" id="fecha_hora" name="fecha_hora" />
-  <input type="hidden" id="usuario" name="usuario" value="{{ session.get('username', '') }}" />
-  <input type="hidden" id="is_admin" name="is_admin" value="{{ session.get('is_admin', '') }}" />
-
-  <button type="submit" class="btn-submit">Registrar Ingreso</button>
-</form>
+  <form action="{{ url_for(session.get('user_role') == 'admin' and 'admin.ingreso' or 'user.ingreso') }}" method="post" class="flex flex-col gap-0 w-full max-w-[480px]" id="ingresoForm">
+    <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+      <label class="flex flex-col min-w-40 flex-1">
+        <p class="text-[##101D27] text-base font-medium leading-normal pb-2">Descripción</p>
+        <textarea id="descripcion" name="descripcion" required placeholder="Escriba la descripción aquí" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[##101D27] focus:outline-0 focus:ring-0 border border-[#d9d9d9] bg-[#101828] focus:border-[#d9d9d9] min-h-36 placeholder:text-[##101D27]/60 p-[15px] text-base font-normal leading-normal"></textarea>
+      </label>
+    </div>
+    <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+      <label class="flex flex-col min-w-40 flex-1">
+        <p class="text-[##101D27] text-base font-medium leading-normal pb-2">Cantidad</p>
+        <input id="cantidad" name="cantidad" type="number" min="1" required placeholder="Ingrese la cantidad" class="form-input flex w-full min-w-0 flex-1 rounded-xl text-[##101D27] focus:outline-0 focus:ring-0 border border-[#d9d9d9] bg-[#101828] focus:border-[#d9d9d9] h-14 placeholder:text-[##101D27]/60 p-[15px] text-base font-normal leading-normal" />
+      </label>
+    </div>
+    <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+      <label class="flex flex-col min-w-40 flex-1">
+        <p class="text-[##101D27] text-base font-medium leading-normal pb-2">Precio Unitario</p>
+        <input id="precio_unitario" name="precio_unitario" type="number" step="0.01" min="0" required placeholder="Ingrese el precio unitario" class="form-input flex w-full min-w-0 flex-1 rounded-xl text-[##101D27] focus:outline-0 focus:ring-0 border border-[#d9d9d9] bg-[#101828] focus:border-[#d9d9d9] h-14 placeholder:text-[##101D27]/60 p-[15px] text-base font-normal leading-normal" />
+      </label>
+    </div>
+    <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+      <label class="flex flex-col min-w-40 flex-1">
+        <p class="text-[##101D27] text-base font-medium leading-normal pb-2">Precio Total</p>
+        <input id="precio_total" name="precio_total" type="number" step="0.01" min="0" readonly placeholder="Ingrese el precio total" class="form-input flex w-full min-w-0 flex-1 rounded-xl text-[##101D27] focus:outline-0 focus:ring-0 border border-[#d9d9d9] bg-[#101828] focus:border-[#d9d9d9] h-14 placeholder:text-[##101D27]/60 p-[15px] text-base font-normal leading-normal" />
+      </label>
+    </div>
+    <!-- Campos ocultos para fecha, hora y usuario -->
+    <input type="hidden" id="fecha_hora" name="fecha_hora" />
+    <input type="hidden" id="usuario" name="usuario" value="{{ session.get('username', '') }}" />
+    <input type="hidden" id="is_admin" name="is_admin" value="{{ session.get('is_admin', '') }}" />
+    <div class="flex px-4 py-3">
+      <button type="submit" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 flex-1 bg-[#232f43] text-[#fff] text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#101D27] hover:text-[#fff] transition-colors"><span class="truncate">Registrar Ingreso</span></button>
+    </div>
+  </form>
+</div>
 
 <!-- SweetAlert2 CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />

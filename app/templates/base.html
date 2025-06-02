@@ -16,16 +16,16 @@
         APP |
       {% endblock %}
     </title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
-  <body>
-    <div class="contenedor-general">
+  <body class="h-screen w-full bg-[#EDEDED] dark:bg-gray-900 text-gray-800 dark:text-gray-200 overflow-auto">
+    <div class="contenedor-general grid grid-cols-5 grid-rows-10 gap-2 w-screen h-screen min-h-0">
       {% block header %}
 
       {% endblock %}
       {% block nav_bar %}
 
       {% endblock %}
-
       {% block main %}
 
       {% endblock %}

@@ -17,6 +17,7 @@ from dotenv import load_dotenv
 import os
 import io
 import openpyxl
+from .excel_utils import crear_excel_estilizado
 
 bp_admin = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -194,7 +195,7 @@ def exportar_excel():
     cursor = conn.cursor()
     consultas = obtener_consultas(usuario, ingreso, egreso, fecha_inicio, fecha_final)
     resultados = ejecutar_consultas(cursor, consultas)
-    output = crear_excel(resultados)
+    output = crear_excel_estilizado(resultados)
     cursor.close()
     conn.close()
 
