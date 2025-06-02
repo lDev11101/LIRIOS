@@ -1,6 +1,7 @@
 # Archivos que no deseo subir
 .env
 __pycache__/
-temp_export/
+database/
+temp_exports/
 test/
 venv/
