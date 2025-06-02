@@ -1,5 +1,6 @@
 # Archivos que no deseo subir
 .env
 __pycache__/
-venv/
+temp_export/
 test/
+venv/
