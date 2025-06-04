@@ -5,28 +5,31 @@
 {% endblock %}
 
 {% block formulario %}
-<div class="layout-content-container flex flex-col max-w-[960px] w-[90%] mx-auto flex-1 bg-[#101828] rounded-xl shadow-lg mt-90">
-  <div class="flex flex-wrap justify-between gap-3 p-4">
-    <p class="tracking-light text-[32px] font-bold leading-tight min-w-72" style="color:#F0B000;">Filtros para el Reporte General</p>
-  </div>
-  <form method="post" class="w-full">
-    <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
-      <label class="flex flex-col min-w-40 flex-1">
-        <p class="text-base font-medium leading-normal pb-2" style="color:#F0B000;">Usuario</p>
-        <select
-          name="usuario" id="usuario"
-          class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl focus:outline-0 focus:ring-0 border border-[#7e6520] bg-[#101828] focus:border-[#F0B000] h-14 placeholder:text-[#dec47c] p-[15px] text-base font-normal leading-normal"
-          style="color:#F0B000;"
-        >
-          <option value="">Seleccione un usuario</option>
-          {% for usuario in usuarios %}
-          <option value="{{ usuario }}" {% if usuario|string == filtros.usuario|string %}selected{% endif %}>{{ usuario }}</option>
-          {% endfor %}
-        </select>
-      </label>
+<div id="sticky-filtros" style="background:#101828; box-shadow:0 2px 8px 0 rgba(0,0,0,0.08); border-bottom:1px solid #232b3b;" class="mt-80 flex justify-center items-center w-full h-20">
+  <div class="layout-content-container flex flex-col max-w-[960px] w-[90%] mx-auto flex-1 bg-[#101828] rounded-xl shadow-lg mt-4 mb-4">
+    <div class="flex flex-wrap justify-between gap-3 p-4">
+      <p class="tracking-light text-[32px] font-bold leading-tight min-w-72" style="color:#F0B000;">Filtros para el Reporte General</p>
     </div>
-    <div class="flex px-4 py-3">
-      <div class="flex h-10 flex-1 items-center justify-start gap-6 rounded-full bg-[#232b3b] p-2">
+    <form method="post" class="w-full flex flex-col gap-2 px-4 py-3">
+      <!-- Fila 1: Usuario -->
+      <div class="flex flex-row items-center gap-4">
+        <label class="flex flex-row items-center min-w-40 flex-1">
+          <span class="text-base font-medium leading-normal pr-4" style="color:#F0B000; min-width:120px;">Usuario</span>
+          <select
+            name="usuario" id="usuario"
+            class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl focus:outline-0 focus:ring-0 border border-[#7e6520] bg-[#101828] focus:border-[#F0B000] h-10 placeholder:text-[#dec47c] p-[10px] text-base font-normal leading-normal"
+            style="color:#F0B000;"
+          >
+            <option value="">Seleccione un usuario</option>
+            {% for usuario in usuarios %}
+            <option value="{{ usuario }}" {% if usuario|string == filtros.usuario|string %}selected{% endif %}>{{ usuario }}</option>
+            {% endfor %}
+          </select>
+        </label>
+      </div>
+      <!-- Fila 2: Ingreso/Egreso -->
+      <div class="flex flex-row items-center gap-6">
+        <span class="text-base font-medium leading-normal pr-4" style="color:#F0B000; min-width:120px;">Tipo</span>
         <label class="flex items-center gap-2 text-[#F0B000] text-sm font-medium leading-normal cursor-pointer">
           <input type="checkbox" name="ingreso" value="on"
             class="accent-[#F0B000] w-4 h-4 rounded focus:ring-0 border border-[#7e6520] bg-[#101828]"
@@ -40,41 +43,44 @@
           Egreso
         </label>
       </div>
-    </div>
-    <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
-      <label class="flex flex-col min-w-40 flex-1">
-        <p class="text-base font-medium leading-normal pb-2" style="color:#F0B000;">Fecha Inicio</p>
+      <!-- Fila 3: Fechas -->
+      <div class="flex flex-row items-center gap-4">
+        <label class="flex flex-row items-center flex-1">
+          <span class="text-base font-medium leading-normal pr-4" style="color:#F0B000; min-width:120px;">Fecha Inicio</span>
+          <input
+            type="date" id="fecha_inicio" name="fecha_inicio"
+            class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl focus:outline-0 focus:ring-0 border border-[#7e6520] bg-[#101828] focus:border-[#F0B000] h-10 placeholder:text-[#dec47c] p-[10px] text-base font-normal leading-normal"
+            style="color:#F0B000;"
+            value="{{ filtros.fecha_inicio }}"
+          />
+        </label>
+        <label class="flex flex-row items-center flex-1">
+          <span class="text-base font-medium leading-normal pr-4" style="color:#F0B000; min-width:120px;">Fecha Final</span>
+          <input
+            type="date" id="fecha_final" name="fecha_final"
+            class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl focus:outline-0 focus:ring-0 border border-[#7e6520] bg-[#101828] focus:border-[#F0B000] h-10 placeholder:text-[#dec47c] p-[10px] text-base font-normal leading-normal"
+            style="color:#F0B000;"
+            value="{{ filtros.fecha_final }}"
+          />
+        </label>
+      </div>
+      <!-- Fila 4: Botón -->
+      <div class="flex flex-row items-center gap-4 justify-start">
         <input
-          type="date" id="fecha_inicio" name="fecha_inicio"
-          class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl focus:outline-0 focus:ring-0 border border-[#7e6520] bg-[#101828] focus:border-[#F0B000] h-14 placeholder:text-[#dec47c] p-[15px] text-base font-normal leading-normal"
-          style="color:#F0B000;"
-          value="{{ filtros.fecha_inicio }}"
+          type="submit"
+          value="Filtrar"
+          class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#F0B000] text-[#101828] text-sm font-bold leading-normal tracking-[0.015em]"
         />
-      </label>
-      <label class="flex flex-col min-w-40 flex-1">
-        <p class="text-base font-medium leading-normal pb-2" style="color:#F0B000;">Fecha Final</p>
-        <input
-          type="date" id="fecha_final" name="fecha_final"
-          class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl focus:outline-0 focus:ring-0 border border-[#7e6520] bg-[#101828] focus:border-[#F0B000] h-14 placeholder:text-[#dec47c] p-[15px] text-base font-normal leading-normal"
-          style="color:#F0B000;"
-          value="{{ filtros.fecha_final }}"
-        />
-      </label>
-    </div>
-    <div class="flex px-4 py-3 justify-start">
-      <input
-        type="submit"
-        value="Filtrar"
-        class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#F0B000] text-[#101828] text-sm font-bold leading-normal tracking-[0.015em]"
-      />
-    </div>
-  </form>
+      </div>
+    </form>
+  </div>
 </div>
 {% endblock %}
 
 {% block contenido %}
-  <h1 class="text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 text-left pb-3 pt-5" style="color:#F0B000;">Tabla de contenido de datos</h1>
-  <div class="flex justify-stretch w-[90%] mx-auto">
+<br>
+<br>
+<div class="flex justify-stretch w-[90%] mx-auto" style="margin-top: 24px;">
     <div class="flex flex-1 gap-3 flex-wrap px-4 py-3 justify-start">
       <form method="post" action="{{ url_for('admin.exportar_excel') }}">
         <input type="hidden" name="usuario" value="{{ filtros.usuario }}">
@@ -91,8 +97,8 @@
       </form>
     </div>
   </div>
-  <div class="px-4 py-3 @container w-[90%] mx-auto">
-    <div class="flex overflow-x-auto rounded-xl border border-[#7e6520] bg-[#101828] max-w-full">
+  <div class="px-4 py-3 @container w-[90%] mx-auto" style="margin-top: 12px;">
+    <div class="flex flex-col overflow-x-auto rounded-xl border border-[#7e6520] bg-[#101828] max-w-full">
       <table class="flex-1 w-full min-w-[800px]">
         <thead>
           <tr class="bg-[#232b3b]">
@@ -123,16 +129,67 @@
           {% endfor %}
         </tbody>
       </table>
+      <div id="pagination-controls" class="flex justify-center items-center gap-2 w-full py-4"></div>
     </div>
-    <style>
-      @media (max-width: 900px) {
-        table, thead, tbody, th, td, tr { display: block; }
-        th, td { width: 100% !important; }
-      }
-    </style>
   </div>
 {% endblock %}
 
 {% block scripts %}
   <script src="{{ url_for('static', filename='js/script-egreso.js') }}"></script>
+  <style>
+    @media (max-width: 900px) {
+      table, thead, tbody, th, td, tr { display: block; }
+      th, td { width: 100% !important; }
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const rows = Array.from(document.querySelectorAll('tbody tr'));
+      const rowsPerPage = 10;
+      let currentPage = 1;
+      const pagination = document.getElementById('pagination-controls');
+
+      function showPage(page) {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        rows.forEach((row, i) => {
+          row.style.display = (i >= start && i < end) ? '' : 'none';
+        });
+        renderPagination(page);
+      }
+
+      function renderPagination(page) {
+        const pageCount = Math.ceil(rows.length / rowsPerPage);
+        pagination.innerHTML = '';
+        if (pageCount <= 1) return;
+        // Botón anterior
+        const prev = document.createElement('button');
+        prev.textContent = 'Anterior';
+        prev.disabled = page === 1;
+        prev.className = 'px-3 py-1 rounded bg-[#232b3b] text-[#F0B000] font-bold';
+        prev.onclick = () => showPage(page - 1);
+        pagination.appendChild(prev);
+
+        // Números de página
+        for (let i = 1; i <= pageCount; i++) {
+          const btn = document.createElement('button');
+          btn.textContent = i;
+          btn.className = 'px-2 py-1 rounded ' + (i === page ? 'bg-[#F0B000] text-[#101828] font-bold' : 'bg-[#232b3b] text-[#F0B000]');
+          btn.disabled = i === page;
+          btn.onclick = () => showPage(i);
+          pagination.appendChild(btn);
+        }
+
+        // Botón siguiente
+        const next = document.createElement('button');
+        next.textContent = 'Siguiente';
+        next.disabled = page === pageCount;
+        next.className = 'px-3 py-1 rounded bg-[#232b3b] text-[#F0B000] font-bold';
+        next.onclick = () => showPage(page + 1);
+        pagination.appendChild(next);
+      }
+
+      if (rows.length > 0) showPage(1);
+    });
+  </script>
 {% endblock %}
