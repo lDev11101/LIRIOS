@@ -30,22 +30,21 @@ def login():
         username = request.form.get("username")
         password = request.form.get("password")
 
-        # Validar credenciales en la base de datos
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute(
-            "SELECT u.user_id, u.username, u.userpass, r.role_name FROM usuarios u JOIN roles r ON u.role_id = r.role_id WHERE u.username = %s",
+            "SELECT u.user_id, u.username, u.userpass, u.nomb_usu, r.role_name FROM usuarios u JOIN roles r ON u.role_id = r.role_id WHERE u.username = %s",
             (username,),
         )
         user = cursor.fetchone()
         cursor.close()
 
-        # Verificar existencia y validez de la contraseña
         if user and bcrypt.checkpw(
             password.encode("utf-8"), user["userpass"].encode("utf-8")
         ):
             session["user_id"] = user["user_id"]
             session["username"] = user["username"]
+            session["nomb_usu"] = user["nomb_usu"]  # <-- Agrega esto
             session["user_role"] = user["role_name"]
             session["is_admin"] = (
                 user["role_name"] == "admin"

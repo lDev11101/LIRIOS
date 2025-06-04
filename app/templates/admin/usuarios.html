@@ -1,0 +1,137 @@
+{% extends 'admin/dashboard.html' %}
+
+{% block titulo %}
+  ADMIN | USUARIOS
+{% endblock %}
+
+{% block contenido %}
+  <h1 class="text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 text-left pb-3 pt-5" style="color:#F0B000;">Lista de Usuarios</h1>
+  <!-- Botón para agregar usuario -->
+  <div class="px-4 flex justify-end mb-3">
+    <button id="abrir-modal-agregar" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded text-sm font-bold">+ Agregar Usuario</button>
+  </div>
+  <div class="px-4 py-3 @container w-[90%] mx-auto">
+    <div class="flex overflow-x-auto rounded-xl border border-[#7e6520] bg-[#101828] max-w-full">
+      <table class="flex-1 w-full min-w-[800px]">
+        <thead>
+          <tr class="bg-[#232b3b]">
+            <th class="px-4 py-3 text-left" style="color:#F0B000;">ID</th>
+            <th class="px-4 py-3 text-left" style="color:#F0B000;">Usuario</th>
+            <th class="px-4 py-3 text-left" style="color:#F0B000;">Rol</th>
+            <th class="px-4 py-3 text-left" style="color:#F0B000;">Nombre</th>
+            <th class="px-4 py-3 text-left" style="color:#F0B000;">Apellido</th>
+            <th class="px-4 py-3 text-left" style="color:#F0B000;">Email</th>
+            <th class="px-4 py-3 text-left" style="color:#F0B000;">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for usuario in usuarios %}
+            <tr class="border-t border-t-[#7e6520]">
+              <td class="h-[56px] px-4 py-2 text-[#F0B000] text-sm font-normal leading-normal">{{ usuario.0 }}</td>
+              <td class="h-[56px] px-4 py-2 text-[#F0B000] text-sm font-normal leading-normal">{{ usuario.1 }}</td>
+              <td class="h-[56px] px-4 py-2 text-[#F0B000] text-sm font-normal leading-normal">{{ usuario.2 }}</td>
+              <td class="h-[56px] px-4 py-2 text-[#F0B000] text-sm font-normal leading-normal">{{ usuario.3 }}</td>
+              <td class="h-[56px] px-4 py-2 text-[#F0B000] text-sm font-normal leading-normal">{{ usuario.4 }}</td>
+              <td class="h-[56px] px-4 py-2 text-[#F0B000] text-sm font-normal leading-normal">{{ usuario.5 }}</td>
+              <td class="h-[56px] px-4 py-2 flex gap-2">
+                <button class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs cambiar-rol-btn" data-id="{{ usuario.0 }}" data-username="{{ usuario.1 }}" data-rol="{{ usuario.2 }}">Cambiar Rol</button>
+                <button class="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-xs eliminar-usuario-btn" data-id="{{ usuario.0 }}" data-username="{{ usuario.1 }}">Eliminar</button>
+                <button class="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded text-xs enviar-reporte-btn" data-id="{{ usuario.0 }}" data-username="{{ usuario.1 }}" data-nombre="{{ usuario.3 }}">Enviar Reporte</button>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="7" class="px-4 py-2 text-center text-[#F0B000]">No hay usuarios para mostrar.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <style>
+      @media (max-width: 900px) {
+        table,
+        thead,
+        tbody,
+        th,
+        td,
+        tr {
+          display: block;
+        }
+        th,
+        td {
+          width: 100% !important;
+        }
+      }
+    </style>
+  </div>
+
+  <!-- Modal flotante para agregar usuario -->
+  <div id="modal-agregar-usuario" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-[#232b3b] rounded-lg p-6 w-full max-w-md shadow-lg relative">
+      <button id="cerrar-modal-agregar" class="absolute top-2 right-2 text-gray-300 hover:text-white text-xl">&times;</button>
+      <h2 class="text-lg font-bold mb-4 text-[#F0B000]">Agregar Nuevo Usuario</h2>
+      <form id="form-agregar-usuario" autocomplete="off">
+        <div class="mb-3">
+          <label class="block text-[#F0B000] mb-1">Usuario</label>
+          <input type="text" name="username" class="w-full px-3 py-2 rounded border" required />
+        </div>
+        <div class="mb-3">
+          <label class="block text-[#F0B000] mb-1">Nombre</label>
+          <input type="text" name="nomb_usu" class="w-full px-3 py-2 rounded border" required />
+        </div>
+        <div class="mb-3">
+          <label class="block text-[#F0B000] mb-1">Apellido</label>
+          <input type="text" name="ape_usu" class="w-full px-3 py-2 rounded border" required />
+        </div>
+        <div class="mb-3">
+          <label class="block text-[#F0B000] mb-1">Email</label>
+          <input type="email" name="email_usu" class="w-full px-3 py-2 rounded border" required />
+        </div>
+        <div class="mb-3">
+          <label class="block text-[#F0B000] mb-1">Contraseña</label>
+          <input type="password" name="userpass" class="w-full px-3 py-2 rounded border" required />
+        </div>
+        <div class="mb-3">
+          <label class="block text-[#F0B000] mb-1">Rol</label>
+          <select name="role_id" class="w-full px-3 py-2 rounded border" required>
+            <option value="1">Administrador</option>
+            <option value="2">Usuario</option>
+          </select>
+        </div>
+        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-bold w-full">Crear Usuario</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="{{ url_for('static', filename='js/usuarios.js') }}"></script>
+  <script>
+    // Mostrar y ocultar modal
+    document.getElementById('abrir-modal-agregar').onclick = function () {
+      document.getElementById('modal-agregar-usuario').classList.remove('hidden')
+    }
+    document.getElementById('cerrar-modal-agregar').onclick = function () {
+      document.getElementById('modal-agregar-usuario').classList.add('hidden')
+    }
+    
+    // Enviar formulario por AJAX
+    document.getElementById('form-agregar-usuario').onsubmit = async function (e) {
+      e.preventDefault()
+      const form = e.target
+      const datos = Object.fromEntries(new FormData(form).entries())
+      const res = await fetch("{{ url_for('admin.agregar_usuario') }}", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(datos)
+      })
+      const data = await res.json()
+      if (data.success) {
+        Swal.fire('¡Éxito!', data.message, 'success').then(() => location.reload())
+      } else {
+        Swal.fire('Error', data.message, 'error')
+      }
+    }
+  </script>
+{% endblock %}

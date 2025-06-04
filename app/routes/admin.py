@@ -1,3 +1,4 @@
+import bcrypt
 from flask import (
     render_template,
     Blueprint,
@@ -9,6 +10,7 @@ from flask import (
     flash,
     current_app,
     send_file,
+    jsonify,
 )
 from functools import wraps
 import mysql.connector
@@ -17,6 +19,7 @@ from dotenv import load_dotenv
 import os
 import io
 import openpyxl
+from werkzeug.security import check_password_hash, generate_password_hash
 from .excel_utils import crear_excel_estilizado
 
 bp_admin = Blueprint("admin", __name__, url_prefix="/admin")
@@ -98,7 +101,9 @@ def obtener_consultas(usuario, ingreso, egreso, fecha_inicio, fecha_final):
             JOIN usuarios u ON e.usuario_id = u.user_id
         """
         if where_egreso:
-            sql_egresos += " WHERE " + " AND ".join(where_egreso)
+            sql_egresos += " WHERE " + " AND ".join(
+                where_egreso
+            )  # <-- aquí estaba el error
         consultas.append((sql_egresos, params_egreso))
     return consultas
 
@@ -205,6 +210,32 @@ def exportar_excel():
         download_name="reporte.xlsx",
         mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
+
+
+@bp_admin.route("/dashboard/usuarios", methods=["GET", "POST"])
+@admin_required
+def usuarios():
+    conn = None
+    cursor = None
+    usuarios = []
+    try:
+        conn = get_db_connection()
+        if not conn:
+            flash("Error: No se pudo conectar a la base de datos", "error")
+            return render_template("admin/usuarios.html", usuarios=usuarios)
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT user_id, username, role_id, nomb_usu, ape_usu, email_usu FROM usuarios"
+        )
+        usuarios = cursor.fetchall()
+    except Exception as e:
+        flash(f"Error al obtener usuarios: {str(e)}", "error")
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+    return render_template("admin/usuarios.html", usuarios=usuarios)
 
 
 @bp_admin.route("/dashboard/ingreso", methods=["GET", "POST"])
@@ -395,3 +426,151 @@ def reportes():
     return render_template(
         "admin/reportes.html", usuarios=usuarios, resultados=resultados, filtros=filtros
     )
+
+
+# Cambiar rol de usuario
+@bp_admin.route("/dashboard/cambiar_rol_usuario", methods=["POST"])
+@admin_required
+def cambiar_rol_usuario():
+    data = request.get_json()
+    user_id = data.get("user_id")
+    nuevo_rol = data.get("nuevo_rol")
+    password = data.get("password")
+    admin_username = session.get("username")
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            "SELECT userpass FROM usuarios WHERE username = %s", (admin_username,)
+        )
+        result = cursor.fetchone()
+        if not result:
+            return jsonify(
+                success=False, message="No se encontró el usuario administrador."
+            )
+        hash_guardado = result[0]
+        # Verificar con bcrypt
+        if not bcrypt.checkpw(password.encode("utf-8"), hash_guardado.encode("utf-8")):
+            return jsonify(success=False, message="Contraseña incorrecta.")
+
+        cursor.execute(
+            "UPDATE usuarios SET role_id = %s WHERE user_id = %s", (nuevo_rol, user_id)
+        )
+        conn.commit()
+        return jsonify(success=True, message="Rol actualizado correctamente.")
+    except Exception as e:
+        return jsonify(success=False, message=str(e))
+    finally:
+        cursor.close()
+        conn.close()
+
+
+# Eliminar usuario
+@bp_admin.route("/dashboard/eliminar_usuario", methods=["POST"])
+@admin_required
+def eliminar_usuario():
+    data = request.get_json()
+    user_id = data.get("user_id")
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("DELETE FROM usuarios WHERE user_id = %s", (user_id,))
+        conn.commit()
+        return jsonify(success=True, message="Usuario eliminado correctamente.")
+    except Exception as e:
+        return jsonify(success=False, message=str(e))
+    finally:
+        cursor.close()
+        conn.close()
+
+
+# Enviar reporte diario por email
+@bp_admin.route("/dashboard/enviar_reporte_usuario", methods=["POST"])
+@admin_required
+def enviar_reporte_usuario():
+    from .email_with_docs import enviar_correo_con_adjuntos
+    import tempfile
+    from datetime import datetime
+
+    data = request.get_json()
+    user_id = data.get("user_id")
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        # Obtener datos del usuario
+        cursor.execute(
+            "SELECT username, nomb_usu, email_usu FROM usuarios WHERE user_id = %s",
+            (user_id,),
+        )
+        user = cursor.fetchone()
+        if not user:
+            return jsonify(success=False, message="Usuario no encontrado.")
+        username, nombre, email = user
+
+        # Obtener movimientos del día
+        hoy = datetime.now().strftime("%Y-%m-%d")
+        consultas = obtener_consultas(username, "on", "on", hoy, hoy)
+        resultados = ejecutar_consultas(cursor, consultas)
+
+        # Crear archivo Excel temporal
+        from .excel_utils import crear_excel_estilizado
+
+        output = crear_excel_estilizado(resultados)
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
+            tmp.write(output.read())
+            tmp_path = tmp.name
+
+        # Enviar correo
+        mensaje = f"Hola {nombre},\nAdjunto encontrarás tu reporte de movimientos del día {hoy}."
+        asunto = "Reporte Diario de Movimientos"
+        enviar_correo_con_adjuntos(email, mensaje, asunto, archivos_adjuntos=[tmp_path])
+
+        # Elimina el archivo temporal
+        os.remove(tmp_path)
+        return jsonify(success=True, message="Reporte enviado correctamente.")
+    except Exception as e:
+        return jsonify(success=False, message=str(e))
+    finally:
+        cursor.close()
+        conn.close()
+
+
+# Crear nuevo usuario
+@bp_admin.route("/dashboard/agregar_usuario", methods=["POST"])
+@admin_required
+def agregar_usuario():
+    data = request.get_json()
+    username = data.get("username", "").strip()
+    nomb_usu = data.get("nomb_usu", "").strip()
+    ape_usu = data.get("ape_usu", "").strip()
+    email_usu = data.get("email_usu", "").strip()
+    userpass = data.get("userpass", "")
+    role_id = data.get("role_id", 2)
+
+    if not all([username, nomb_usu, ape_usu, email_usu, userpass, role_id]):
+        return jsonify(success=False, message="Todos los campos son obligatorios.")
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        # Verifica si el usuario o email ya existen
+        cursor.execute(
+            "SELECT 1 FROM usuarios WHERE username = %s OR email_usu = %s",
+            (username, email_usu),
+        )
+        if cursor.fetchone():
+            return jsonify(success=False, message="El usuario o email ya existen.")
+
+        hash_pass = generate_password_hash(userpass)
+        cursor.execute(
+            "INSERT INTO usuarios (username, nomb_usu, ape_usu, email_usu, userpass, role_id) VALUES (%s, %s, %s, %s, %s, %s)",
+            (username, nomb_usu, ape_usu, email_usu, hash_pass, role_id),
+        )
+        conn.commit()
+        return jsonify(success=True, message="Usuario creado exitosamente.")
+    except Exception as e:
+        return jsonify(success=False, message=str(e))
+    finally:
+        cursor.close()
+        conn.close()
