@@ -541,31 +541,35 @@ def enviar_reporte_usuario():
 @admin_required
 def agregar_usuario():
     data = request.get_json()
-    username = data.get("username", "").strip()
-    nomb_usu = data.get("nomb_usu", "").strip()
-    ape_usu = data.get("ape_usu", "").strip()
-    email_usu = data.get("email_usu", "").strip()
-    userpass = data.get("userpass", "")
-    role_id = data.get("role_id", 2)
-
-    if not all([username, nomb_usu, ape_usu, email_usu, userpass, role_id]):
+    required_fields = ["username", "nomb_usu", "ape_usu", "email_usu", "userpass", "role_id"]
+    user_data = {field: str(data.get(field, "")).strip() for field in required_fields}
+    if not all(user_data.values()):
         return jsonify(success=False, message="Todos los campos son obligatorios.")
 
     conn = get_db_connection()
     cursor = conn.cursor()
     try:
-        # Verifica si el usuario o email ya existen
         cursor.execute(
             "SELECT 1 FROM usuarios WHERE username = %s OR email_usu = %s",
-            (username, email_usu),
+            (user_data["username"], user_data["email_usu"]),
         )
         if cursor.fetchone():
             return jsonify(success=False, message="El usuario o email ya existen.")
 
-        hash_pass = generate_password_hash(userpass)
+        hash_pass = generate_password_hash(user_data["userpass"])
         cursor.execute(
-            "INSERT INTO usuarios (username, nomb_usu, ape_usu, email_usu, userpass, role_id) VALUES (%s, %s, %s, %s, %s, %s)",
-            (username, nomb_usu, ape_usu, email_usu, hash_pass, role_id),
+            """
+            INSERT INTO usuarios (username, nomb_usu, ape_usu, email_usu, userpass, role_id)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            """,
+            (
+                user_data["username"],
+                user_data["nomb_usu"],
+                user_data["ape_usu"],
+                user_data["email_usu"],
+                hash_pass,
+                user_data["role_id"],
+            ),
         )
         conn.commit()
         return jsonify(success=True, message="Usuario creado exitosamente.")
